@@ -1,0 +1,5 @@
+frontend/node_modules/
+frontend/.next/
+backend/**/__pycache__/
+backend/wwreviews/db.sqlite3
+backend/wwreviews/.env
