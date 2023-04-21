@@ -1,11 +1,13 @@
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.generics import CreateAPIView
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.response import Response
-from django.http import QueryDict
+from typing import Any, Literal
+
 from django.db import models
-from typing import Literal, Any
+from django.http import QueryDict
+from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 READ_ACTIONS = {"retrieve", "list"}
 
@@ -89,52 +91,67 @@ class UnauthenticatedReadMixin:
         """
         Gets the permissions for this class. Allows READ operations.
         """
-        if self.action in ["retrieve", "list"]:
+        if self.action in READ_ACTIONS:
             return [AllowAny()]
         return [IsAuthenticated()]
 
 
-class CreateOrganizationFieldMixin:
+class DisablePutMixin:
     """
-    Mixin which overrides the create method to guarantee the resource is created with the organization field set to the
+    Mixin for disabling PUT requests for a ModelViewSet.
+    """
+
+    def update(self, request, *args, **kwargs):
+        """
+        Overrides to disable PUT operations for this view.
+        """
+        if request.method == "PUT":
+            return Response(
+                {"message": "PUT requests are disabled for this endpoint."}, status=status.HTTP_405_METHOD_NOT_ALLOWED
+            )
+        return super().update(request, *args, **kwargs)
+
+
+class DisablePatchMixin:
+    """
+    Mixin for disabling PATCH requests for a ModelViewSet.
+    """
+
+    # pylint: disable=R0201
+    def partial_update(self, request, *args, **kwargs):
+        """
+        Overrides to disable PUT operations for this view.
+        """
+        return Response(
+            {"message": "PATCH requests are disabled for this endpoint."}, status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+
+class CreateUserFieldMixin:
+    """
+    Mixin which overrides the create method to guarantee the resource is created with the user field set to the
     requesting user.
     """
 
     def create(self, request, *args, **kwargs):
         """
-        Validates that the organization provided in the post request, if any, matches the organization the request is
-        from. If the organization is not provided in the request, the validation is skipped and the requesting
-        organization is set appropriately.
+        Validates that the user provided in the post request, if any, matches the user the request is from. If the user
+        is not provided in the request, the validation is skipped and the requesting user is set appropriately.
         """
-        if request.user.member is None:
-            return Response(
-                {
-                    "organization": [
-                        f"You must be part of an organization to create a '{self.serializer_class.Meta.model}' resource."
-                    ]
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        success, response = validate(self.serializer_class, request, partial=True)
-
-        if not success:
-            return response
-
-        validated_data = response
-        if "organization" in validated_data:
-            # Remove organization from the dictionary and validate that it is the same as the requesting organization.
-            if validated_data.pop("organization") != request.user.member.organization:
+        request.POST._mutable = True
+        if "user" in request.POST:
+            # Remove user from the dictionary and validate that it is the same as the requesting user.
+            if request.POST.pop("user") != request.user:
                 return Response(
                     {
-                        "organization": [
-                            f"Cannot create a '{self.serializer_class.Meta.model}' resource for an "
-                            "organization other than your own. This field does not need to be specified."
-                        ]
+                        "user": f"Cannot create a '{self.serializer_class.Meta.model}' resource for a user other than "
+                        "yourself. This field does not need to be specified."
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-        safe_set_querydict(request.POST, "organization", request.user.member.organization.pk)
+        request.POST["user"] = request.user.pk
+        request.POST._mutable = False
         return super().create(request, *args, **kwargs)
 
 

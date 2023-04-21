@@ -41,6 +41,8 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   });
   useEffect(() => {
     if (!PUBLIC_URLS.some((publicUrl) => router.route.match(publicUrl)) && !user) {
+      console.log(router.route);
+      console.log(PUBLIC_URLS.map((publicUrl) => router.route.match(publicUrl)));
       router.push("/login");
     }
   }, [router.pathname]);

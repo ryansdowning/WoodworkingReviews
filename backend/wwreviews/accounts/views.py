@@ -1,15 +1,18 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import redirect
-from django.conf import settings
 import uuid
+
 import praw
-from accounts.models import Member
-from rest_framework.authtoken.models import Token
-from wwreviews.utils import ReadOnlyIsAuthenticatedView
-from accounts.serializers import MemberSerializer
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from accounts.models import Member
+from accounts.serializers import MemberSerializer
+from wwreviews.utils import ReadOnlyIsAuthenticatedView
 
 
 class MemberView(ReadOnlyIsAuthenticatedView):
@@ -30,18 +33,17 @@ class RedditAuthView(APIView):
     def get(self, request):
         state = str(uuid.uuid4())
         redirect_url = settings.REDDIT_CLIENT.auth.url(scopes=["identity"], state=state, duration="permanent")
-        request.session['reddit_state'] = state
+        request.session["reddit_state"] = state
         return redirect(redirect_url)
-        # return Response({"redirect_url": redirect_url}, status=status.HTTP_200_OK)
-    
-    
+
+
 class RedditCallbackView(APIView):
     def get(self, request):
-        code = request.GET.get('code')
-        state = request.GET.get('state')
-        if state != request.session.get('reddit_state'):
+        code = request.GET.get("code")
+        state = request.GET.get("state")
+        if state != request.session.get("reddit_state"):
             return Response({"state": ["state does not match."]}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         user_client = praw.Reddit(
             client_id=settings.REDDIT_CLIENT_ID,
             client_secret=settings.REDDIT_CLIENT_SECRET,
@@ -61,5 +63,5 @@ class RedditCallbackView(APIView):
             user = User.objects.create(username=username, password=str(uuid.uuid4()))
             token = Token.objects.create(user=user)
             member = Member.objects.create(user=user, reddit_username=username, reddit_refresh_token=refresh_token)
-            
+
         return redirect(f"{settings.FE_URL}login?token={token.key}")

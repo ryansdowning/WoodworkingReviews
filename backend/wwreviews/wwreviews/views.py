@@ -4,15 +4,16 @@ Views for the wwreviews app.
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from wwreviews.serializers import RegisterSerializer, UserSerializer
-from wwreviews.utils import IsAuthenticatedMixin, IsAuthenticatedView
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django_filters.rest_framework import DjangoFilterBackend
+
+from wwreviews.serializers import RegisterSerializer, UserSerializer
+from wwreviews.utils import IsAuthenticatedMixin, IsAuthenticatedView
 
 
 class UserEndpoint(IsAuthenticatedView):

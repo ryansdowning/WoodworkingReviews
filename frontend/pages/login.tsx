@@ -1,5 +1,5 @@
 import { URL_ROOT } from "../utilities/urls";
-import { ActionIcon, Modal, Stack, Title } from "@mantine/core";
+import { ActionIcon, Card, Modal, Stack, Title } from "@mantine/core";
 import { IconBrandReddit } from "@tabler/icons";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
@@ -20,9 +20,11 @@ export default function LoginPage() {
     <Modal centered={true} opened={true} onClose={() => {}} withCloseButton={false}>
       <Stack align="center">
         <Title order={3}>Login with Reddit</Title>
-        <ActionIcon size="xl" variant="subtle">
-          <IconBrandReddit color="black" onClick={() => router.push(`${URL_ROOT}/accounts/reddit-auth/`)} />
-        </ActionIcon>
+        <Card shadow="md">
+          <ActionIcon size="xl" variant="subtle">
+            <IconBrandReddit color="black" onClick={() => router.push(`${URL_ROOT}/accounts/reddit-auth/`)} />
+          </ActionIcon>
+        </Card>
       </Stack>
     </Modal>
   );

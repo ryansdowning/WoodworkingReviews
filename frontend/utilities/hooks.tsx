@@ -27,6 +27,8 @@ export interface useResourceOptions {
 // eslint-ignore-next-line
 export interface useResourcesOptions extends useResourceOptions {
   filters?: Record<string, any>;
+  limit?: number;
+  offset?: number;
 }
 
 /**
@@ -46,16 +48,24 @@ export function useResources<T>(url: string, options?: useResourcesOptions) {
       "GET",
       URL_ROOT,
       url,
-      options?.filters
-        ? Object.entries(options.filters).reduce(
-            // Only include filters that aren't undefined.
-            (prev, el) => (el[0] != undefined && el[0].length != 0 ? { ...prev, [el[0]]: el[1] } : prev),
-            {}
-          )
-        : {},
+      Object.entries({ ...options?.filters, offset: options?.offset, limit: options?.limit }).reduce(
+        // Only include filters that aren't undefined.
+        (prev, el) => {
+          if (el[1] === undefined) {
+            return prev;
+          }
+          return { ...prev, [el[0]]: Array.isArray(el[1]) ? el[1].join(",") : el[1] };
+        },
+        {}
+      ),
       typeof options?.isAuthorized === "undefined" ? true : options.isAuthorized
     )
-      ?.then((data) => data.map((el: IBuildInput) => build<T>(el)))
+      ?.then((data) => {
+        if (typeof data.count !== undefined && typeof data.results !== "undefined") {
+          return data.results.map((el: IBuildInput) => build<T>(el));
+        }
+        return data.map((el: IBuildInput) => build<T>(el));
+      })
       ?.then((data) => setResources(data))
       ?.then(() => setRefreshQueue(undefined))
       ?.then(() => setLoading(false));
@@ -97,7 +107,7 @@ export function useResource<T>(url: string, id: number | string, options?: useRe
   const [loading, setLoading] = useState(true);
 
   function refresh() {
-    return makeRequest("GET", URL_ROOT, `${url}${id}/`, {}, true, false)
+    return makeRequest("GET", URL_ROOT, `${url}${id}/`, {}, false, false)
       ?.then((data: IBuildInput) => build<T>(data))
       ?.then((data) => {
         setResource(data);
@@ -132,6 +142,55 @@ export function useResource<T>(url: string, id: number | string, options?: useRe
     () => Promise<T>,
     boolean
   ];
+}
+
+export function usePaginationTotal(url: string, options?: useResourcesOptions) {
+  const [paginationTotal, setPaginationTotal] = useState<number>();
+  const [refreshQueue, setRefreshQueue] = useState<number | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  function refresh() {
+    setLoading(true);
+    return makeRequest(
+      "GET",
+      URL_ROOT,
+      url,
+      Object.entries({
+        ...options?.filters,
+        offset: options?.offset,
+        limit: options?.limit ? options?.limit : 1,
+      }).reduce(
+        // Only include filters that aren't undefined.
+        (prev, el) => {
+          if (el[1] === undefined) {
+            return prev;
+          }
+          return { ...prev, [el[0]]: Array.isArray(el[1]) ? el[1].join(",") : el[1] };
+        },
+        {}
+      ),
+      !!options?.isAuthorized
+    )
+      ?.then((data) => setPaginationTotal(data.count))
+      ?.then(() => setRefreshQueue(undefined))
+      ?.then(() => setLoading(false));
+  }
+
+  useEffect(
+    () => {
+      // If anything in the required array is undefined, do nothing.
+      if (options?.required?.some((el) => el === undefined)) return;
+
+      // Debounce the request so we don't send out a ton at once due to dependencies.
+      if (refreshQueue != undefined) clearTimeout(refreshQueue);
+      setLoading(true);
+      setRefreshQueue(
+        window.setTimeout(refresh, options?.debounceTime ? options.debounceTime : BASE_DEBOUNCE_TIME)
+      );
+    },
+    options?.dependsOn ? options.dependsOn : []
+  );
+  return paginationTotal;
 }
 
 export function useUser() {

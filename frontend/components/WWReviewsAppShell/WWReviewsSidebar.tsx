@@ -1,4 +1,5 @@
 import { useDark, useUser } from "../../utilities/hooks";
+import { MEMBER_ROLE_NAMES } from "../../utilities/types/accounts";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import { OverlayContext } from "./WWReviewsAppShell";
 import {
@@ -16,7 +17,7 @@ import {
   Badge,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import { IconCaretDown, IconDashboard, IconTicket } from "@tabler/icons";
+import { IconCaretDown, IconDashboard, IconHierarchy3, IconTicket } from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
@@ -177,7 +178,7 @@ export function WWReviewsSidebar() {
   const dark = useDark();
   const { hovered, ref } = useHover();
   const [, setOverlay] = useContext(OverlayContext);
-  const [user] = useUser();
+  const [user, member] = useUser();
 
   const DIVIDER = (
     <Divider
@@ -222,6 +223,13 @@ export function WWReviewsSidebar() {
 
           {DIVIDER}
           <WWReviewsSidebarMenuItem title="Dashboard" icon={<IconDashboard stroke={1} />} link={`/`} />
+          {member && member.role === MEMBER_ROLE_NAMES.MODERATOR && (
+            <WWReviewsSidebarMenuItem
+              title="Categories"
+              icon={<IconHierarchy3 stroke={1} />}
+              link={"/categories"}
+            />
+          )}
           {DIVIDER}
           <Group align="center" spacing="xs">
             <ColorSchemeToggle />

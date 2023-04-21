@@ -51,6 +51,11 @@ export type Resource = {
   id: number;
 };
 
+export type TrackedMixin = {
+  created_at: Date;
+  updated_at: Date;
+};
+
 export type User = Resource & {
   email: string;
   first_name: string;

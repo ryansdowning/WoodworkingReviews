@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from accounts.views import RedditAuthView, RedditCallbackView, MemberView
+
+from accounts.views import MemberView, RedditAuthView, RedditCallbackView
 
 router = DefaultRouter()
 router.register("member", MemberView)

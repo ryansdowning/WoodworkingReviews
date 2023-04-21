@@ -1,5 +1,8 @@
 export function formatDollars(dollars: number) {
-  let formatted = `$${Math.abs(dollars).toFixed(2)}`;
+  let formatted = Math.abs(dollars)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, "$&,");
+  formatted = `$${formatted}`;
   return dollars >= 0 ? formatted : `-${formatted}`;
 }
 

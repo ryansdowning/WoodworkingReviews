@@ -14,15 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
-from wwreviews.views import (
-    ChangePasswordEndpoint,
-    SignupEndpoint,
-    TokenEndpoint,
-    UserEndpoint,
-)
 from rest_framework.routers import DefaultRouter
+
+from wwreviews.views import ChangePasswordEndpoint, SignupEndpoint, TokenEndpoint, UserEndpoint
 
 router = DefaultRouter()
 router.register("user", UserEndpoint, basename="user")
@@ -34,4 +30,5 @@ urlpatterns = [
     path("v1/auth/signup/", SignupEndpoint.as_view()),
     path("v1/auth/change-password/", ChangePasswordEndpoint.as_view()),
     path("v1/accounts/", include("accounts.urls")),
+    path("v1/products/", include("products.urls")),
 ]

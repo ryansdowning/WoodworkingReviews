@@ -3,3 +3,6 @@ frontend/.next/
 backend/**/__pycache__/
 backend/wwreviews/db.sqlite3
 backend/wwreviews/.env
+notebooks/
+.vscode/
+

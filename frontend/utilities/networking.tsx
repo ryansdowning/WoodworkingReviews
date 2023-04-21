@@ -118,7 +118,7 @@ export function createResource<T extends Resource>(
     true,
     options?.autoCatch ? options.autoCatch : true
   )?.then((data: T) => {
-    options?.notify != false &&
+    options?.notify &&
       showNotification({
         color: "green",
         title: "Resource created 👍",
@@ -163,7 +163,7 @@ export function updateResource<T extends Resource>(
     options?.autoCatch ? options.autoCatch : true
   )?.then(
     () =>
-      options?.notify != false &&
+      options?.notify &&
       showNotification({
         title: "Sucess!",
         message: "Resource updated!",
@@ -175,7 +175,7 @@ export function updateResource<T extends Resource>(
 export function deleteResource(url: string, id: number | string, options?: MakeRequestOptions) {
   return makeRequest("DELETE", URL_ROOT, url + id + "/", {}, true)?.then(
     () =>
-      options?.notify != false &&
+      options?.notify &&
       showNotification({
         color: "green",
         title: "Resource deleted 👍",

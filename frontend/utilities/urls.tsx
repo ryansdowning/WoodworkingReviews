@@ -5,15 +5,15 @@ const LOCAL_URL_ROOT = "127.0.0.1";
 
 // FRONTEND (all local urls).
 export const HOMEPAGE_URL = "/";
-export const PUBLIC_URLS = [/^\/login$/, /^\/$/];
+export const PUBLIC_URLS = [/^\/login$/, /^\/$/, /^\/product\/\[productId\]$/];
 
 // BACKEND.
 export const PRODUCTION_MODE = process.env.PRODUCTION_MODE === "True";
 const LOCAL = !PRODUCTION_MODE ? IS_LOCAL_SERVING_RUNNING : false;
 const USE_HTTPS = !LOCAL;
 
-export const DOMAIN = "woodworking.ryansdowning.com";
-const API_PREFIX = "api.";
+export const DOMAIN = "ryansdowning.pythonanywhere.com";
+const API_PREFIX = "";
 export const HTTP_PREFIX = USE_HTTPS ? "https://" : "http://";
 
 /**
