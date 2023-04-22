@@ -13,7 +13,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from wwreviews.serializers import RegisterSerializer, UserSerializer
-from wwreviews.utils import IsAuthenticatedMixin, IsAuthenticatedView
+from wwreviews.utils import READ_ACTIONS, IsAuthenticatedMixin, IsAuthenticatedView
+from accounts.models import Member
 
 
 class UserEndpoint(IsAuthenticatedView):
@@ -27,6 +28,8 @@ class UserEndpoint(IsAuthenticatedView):
     filterset_fields = ["id", "username", "email", "first_name", "last_name"]
 
     def get_queryset(self):
+        if self.request.user is not None and self.request.user.member.role == Member.Role.MODERATOR and self.action in READ_ACTIONS:
+            return self.queryset
         return self.queryset.filter(id=self.request.user.id)
 
 

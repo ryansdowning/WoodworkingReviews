@@ -16,10 +16,10 @@ from products.serializers import (
     BasicProductReviewSerializer,
     SuggestedProductSerializer,
 )
-from wwreviews.utils import READ_ACTIONS, CreateUserFieldMixin, DisablePutMixin, UnauthenticatedReadMixin
+from wwreviews.utils import READ_ACTIONS, CreateUserFieldMixin, DisablePutMixin, UnauthenticatedReadMixin, IsAuthenticatedView
 
 
-class SuggestedProductView(CreateUserFieldMixin, ModelViewSet):
+class SuggestedProductView(CreateUserFieldMixin, IsAuthenticatedView):
     queryset = SuggestedProduct.objects.all()
     serializer_class = SuggestedProductSerializer
     filter_backends = [DjangoFilterBackend]

@@ -21,10 +21,10 @@ load_dotenv(BASE_DIR / ".env")
 
 if "PYTHONANYWHERE_DOMAIN" in os.environ:
     DEBUG = True
-    FE_DOMAIN = "https://main.d3sbqg401qd9mo.amplifyapp.com/"
+    FE_URL = "https://main.d3sbqg401qd9mo.amplifyapp.com/"
 else:
     DEBUG = True
-    FE_DOMAIN = "http://localhost:3000/"
+    FE_URL = "http://localhost:3000/"
 
 DATABASES = {
     "default": {

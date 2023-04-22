@@ -107,7 +107,7 @@ export function useResource<T>(url: string, id: number | string, options?: useRe
   const [loading, setLoading] = useState(true);
 
   function refresh() {
-    return makeRequest("GET", URL_ROOT, `${url}${id}/`, {}, false, false)
+    return makeRequest("GET", URL_ROOT, `${url}${id}/`, {}, options?.isAuthorized!, false)
       ?.then((data: IBuildInput) => build<T>(data))
       ?.then((data) => {
         setResource(data);

@@ -17,7 +17,7 @@ import {
   Badge,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import { IconCaretDown, IconDashboard, IconHierarchy3, IconTicket } from "@tabler/icons";
+import { IconCaretDown, IconDashboard, IconHierarchy3, IconTicket, IconZoomQuestion } from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
@@ -228,6 +228,13 @@ export function WWReviewsSidebar() {
               title="Categories"
               icon={<IconHierarchy3 stroke={1} />}
               link={"/categories"}
+            />
+          )}
+          {member && member.role === MEMBER_ROLE_NAMES.MODERATOR && (
+            <WWReviewsSidebarMenuItem
+              title="Suggested Products"
+              icon={<IconZoomQuestion stroke={1} />}
+              link={"/suggested"}
             />
           )}
           {DIVIDER}

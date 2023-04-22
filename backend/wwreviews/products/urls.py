@@ -6,12 +6,14 @@ from products.views import (
     FeedbackView,
     ProductActionView,
     ProductView,
+    SuggestedProductView,
     RatingView,
     BasicProductReviewView,
 )
 
 router = DefaultRouter()
 router.register("product", ProductView)
+router.register("suggested-product", SuggestedProductView)
 router.register("product-action", ProductActionView)
 router.register("category", CategoryView)
 router.register("rating", RatingView)
