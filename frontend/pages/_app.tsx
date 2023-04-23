@@ -28,21 +28,13 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 
   useEffect(() => {
     if (isLoggedIn() && !user) {
-      makeRequest("GET", URL_ROOT, "auth/user/", {}, true)?.then((userData) => {
-        setUser(userData[0]);
-        userData[0] &&
-          makeRequest("GET", URL_ROOT, "accounts/member/", { user: userData[0].id }, true)?.then(
-            (memberData) => {
-              setMember(memberData[0]);
-            }
-          );
-      });
+      makeRequest("GET", URL_ROOT, "auth/user/me/", {}, true)
+        ?.then(setUser)
+        .then(() => makeRequest("GET", URL_ROOT, "accounts/member/me/", {}, true)?.then(setMember));
     }
   });
   useEffect(() => {
     if (!PUBLIC_URLS.some((publicUrl) => router.route.match(publicUrl)) && !user) {
-      console.log(router.route);
-      console.log(PUBLIC_URLS.map((publicUrl) => router.route.match(publicUrl)));
       router.push("/login");
     }
   }, [router.pathname]);

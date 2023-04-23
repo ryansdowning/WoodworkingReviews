@@ -154,9 +154,7 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 (
                     "value",
-                    models.SmallIntegerField(
-                        validators=[products.models.validate_rating]
-                    ),
+                    models.SmallIntegerField(validators=[products.models.validate_rating]),
                 ),
                 (
                     "product",

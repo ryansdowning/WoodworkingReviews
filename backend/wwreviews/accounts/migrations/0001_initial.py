@@ -27,9 +27,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "role",
-                    models.SmallIntegerField(
-                        blank=True, choices=[(1, "User"), (2, "Moderator")], default=1
-                    ),
+                    models.SmallIntegerField(blank=True, choices=[(1, "User"), (2, "Moderator")], default=1),
                 ),
                 ("reddit_username", models.TextField(unique=True)),
                 ("reddit_refresh_token", models.TextField()),

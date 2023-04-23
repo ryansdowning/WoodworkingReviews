@@ -11,6 +11,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 
 from wwreviews.serializers import RegisterSerializer, UserSerializer
 from wwreviews.utils import READ_ACTIONS, IsAuthenticatedMixin, IsAuthenticatedView
@@ -28,9 +29,17 @@ class UserEndpoint(IsAuthenticatedView):
     filterset_fields = ["id", "username", "email", "first_name", "last_name"]
 
     def get_queryset(self):
-        if self.request.user is not None and self.request.user.member.role == Member.Role.MODERATOR and self.action in READ_ACTIONS:
+        if (
+            self.request.user is not None
+            and self.request.user.member.role == Member.Role.MODERATOR
+            and self.action in READ_ACTIONS
+        ):
             return self.queryset
         return self.queryset.filter(id=self.request.user.id)
+
+    @action(detail=False, methods=["get"], url_path="me")
+    def get_my_user(self, request):
+        return Response(self.serializer_class(request.user).data, status=status.HTTP_200_OK)
 
 
 class SignupEndpoint(CreateAPIView):

@@ -9,10 +9,11 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 
 from accounts.models import Member
 from accounts.serializers import MemberSerializer
-from wwreviews.utils import ReadOnlyIsAuthenticatedView
+from wwreviews.utils import IsAuthenticatedMixin, ReadOnlyIsAuthenticatedView
 
 
 class MemberView(ReadOnlyIsAuthenticatedView):
@@ -27,6 +28,10 @@ class MemberView(ReadOnlyIsAuthenticatedView):
         if self.request.user.member is None:
             return self.queryset.none()
         return self.queryset.filter(user=self.request.user)
+
+    @action(detail=False, methods=["get"], url_path="me")
+    def get_my_member(self, request):
+        return Response(self.serializer_class(request.user.member).data, status=status.HTTP_200_OK)
 
 
 class RedditAuthView(APIView):

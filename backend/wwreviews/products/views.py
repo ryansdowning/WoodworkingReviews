@@ -16,7 +16,13 @@ from products.serializers import (
     BasicProductReviewSerializer,
     SuggestedProductSerializer,
 )
-from wwreviews.utils import READ_ACTIONS, CreateUserFieldMixin, DisablePutMixin, UnauthenticatedReadMixin, IsAuthenticatedView
+from wwreviews.utils import (
+    READ_ACTIONS,
+    CreateUserFieldMixin,
+    DisablePutMixin,
+    UnauthenticatedReadMixin,
+    IsAuthenticatedView,
+)
 
 
 class SuggestedProductView(CreateUserFieldMixin, IsAuthenticatedView):
