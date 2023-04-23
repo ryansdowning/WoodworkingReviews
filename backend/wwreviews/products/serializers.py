@@ -1,7 +1,7 @@
-from rest_framework import serializers
 from django.db.models import Avg
+from rest_framework import serializers
 
-from products.models import Category, Feedback, SuggestedProduct, Product, ProductAction, Rating
+from products.models import Category, Feedback, Product, ProductAction, Rating, SuggestedProduct
 
 
 class SuggestedProductSerializer(serializers.ModelSerializer):

@@ -1,28 +1,17 @@
+from django_filters import BaseInFilter, BooleanFilter, FilterSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.pagination import LimitOffsetPagination
-from django_filters import FilterSet, BaseInFilter, BooleanFilter
 
 from accounts.models import Member
 from products.models import Category, Feedback, Product, ProductAction, Rating, SuggestedProduct
-from products.serializers import (
-    CategorySerializer,
-    FeedbackSerializer,
-    ProductActionSerializer,
-    ProductSerializer,
-    RatingSerializer,
-    BasicProductReviewSerializer,
-    SuggestedProductSerializer,
-)
-from wwreviews.utils import (
-    READ_ACTIONS,
-    CreateUserFieldMixin,
-    DisablePutMixin,
-    UnauthenticatedReadMixin,
-    IsAuthenticatedView,
-)
+from products.serializers import (BasicProductReviewSerializer, CategorySerializer, FeedbackSerializer,
+                                  ProductActionSerializer, ProductSerializer, RatingSerializer,
+                                  SuggestedProductSerializer)
+from wwreviews.utils import (READ_ACTIONS, CreateUserFieldMixin, DisablePutMixin, IsAuthenticatedView,
+                             UnauthenticatedReadMixin)
 
 
 class SuggestedProductView(CreateUserFieldMixin, IsAuthenticatedView):
