@@ -2,18 +2,27 @@ import { SuggestedProductCard } from "../../components/Products/SuggestedProduct
 import { WWReviewsAppShell } from "../../components/WWReviewsAppShell/WWReviewsAppShell";
 import { useResources } from "../../utilities/hooks";
 import { SugesstedProduct } from "../../utilities/types/products";
-import { Stack, Title } from "@mantine/core";
+import { Card, Stack, Title } from "@mantine/core";
 
 export default function SuggestedProductsPage() {
-  const [suggestedProducts] = useResources<SugesstedProduct>("products/suggested-product/");
+  const [suggestedProducts, , refreshSuggestedProducts] = useResources<SugesstedProduct>(
+    "products/suggested-product/"
+  );
   return (
     <WWReviewsAppShell>
       <Stack>
         <Title>Suggested Products</Title>
         <Stack>
-          {suggestedProducts.map((suggestedProduct) => (
-            <SuggestedProductCard suggestedProduct={suggestedProduct} />
-          ))}
+          {suggestedProducts.length > 0 ? (
+            suggestedProducts.map((suggestedProduct) => (
+              <SuggestedProductCard
+                suggestedProduct={suggestedProduct}
+                refreshSuggestedProducts={refreshSuggestedProducts}
+              />
+            ))
+          ) : (
+            <Card shadow="md">No suggested products!</Card>
+          )}
         </Stack>
       </Stack>
     </WWReviewsAppShell>

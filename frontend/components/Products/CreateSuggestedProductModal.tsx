@@ -2,6 +2,7 @@ import { createResource } from "../../utilities/networking";
 import { SugesstedProduct } from "../../utilities/types/products";
 import { Button, Group, Modal, ModalProps, NumberInput, Stack, TextInput, Title, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 import { Dispatch, SetStateAction } from "react";
 
 export interface CreateSuggestedProductModalProps extends Omit<ModalProps, "children"> {
@@ -25,6 +26,13 @@ export function CreateSuggestedProductModal({ setOpened, ...others }: CreateSugg
             )
               ?.then(form.reset)
               .then(() => setOpened(false))
+              .then(() =>
+                showNotification({
+                  title: "Suggested created successfully!",
+                  message:
+                    "Thank you for the suggestion. It has been sent to the moderation team and will be added soon if it is approved.",
+                })
+              )
           )}
         >
           <TextInput placeholder="name..." label="Name" required {...form.getInputProps("name")} />

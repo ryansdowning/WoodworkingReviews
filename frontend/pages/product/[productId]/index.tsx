@@ -26,7 +26,7 @@ export default function ProductPage() {
     dependsOn: [productId],
     isAuthorized: false,
   });
-  const [feedbacks] = useResources<Feedback>("products/feedback/", {
+  const [feedbacks, , refreshFeedbacks] = useResources<Feedback>("products/feedback/", {
     filters: { product: productId },
     dependsOn: [productId],
     isAuthorized: false,
@@ -41,6 +41,7 @@ export default function ProductPage() {
           basicReview={basicReview}
           ratings={ratings}
           feedbacks={feedbacks}
+          refreshFeedbacks={refreshFeedbacks}
         />
       )}
     </WWReviewsAppShell>

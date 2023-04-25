@@ -1,7 +1,7 @@
 import { BasicProductReview, Feedback, Product, Rating } from "../../utilities/types/products";
 import { FeedbackCard } from "./FeedbackCard";
 import ProductCard from "./ProductCard";
-import { Stack, StackProps, Title } from "@mantine/core";
+import { Card, Stack, StackProps, Title } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons";
 import Link from "next/link";
 
@@ -11,6 +11,7 @@ export interface ProductPageStackProps extends Omit<StackProps, "children"> {
   basicReview: BasicProductReview;
   ratings: Rating[];
   feedbacks: Feedback[];
+  refreshFeedbacks: () => void;
 }
 
 export function ProductPageStack({
@@ -19,6 +20,7 @@ export function ProductPageStack({
   basicReview,
   ratings,
   feedbacks,
+  refreshFeedbacks,
   sx,
   ...others
 }: ProductPageStackProps) {
@@ -35,9 +37,13 @@ export function ProductPageStack({
       />
       <Title order={2}>Reviews</Title>
       <Stack>
-        {feedbacks.map((feedback, i) => (
-          <FeedbackCard feedback={feedback} key={i} />
-        ))}
+        {feedbacks.length > 0 ? (
+          feedbacks.map((feedback, i) => (
+            <FeedbackCard feedback={feedback} refreshFeedbacks={refreshFeedbacks} key={i} />
+          ))
+        ) : (
+          <Card shadow="md">No reviews yet!</Card>
+        )}
       </Stack>
     </Stack>
   );

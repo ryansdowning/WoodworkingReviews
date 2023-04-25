@@ -3,7 +3,7 @@ import ProductCard from "../components/Products/ProductCard";
 import { WWReviewsAppShell } from "../components/WWReviewsAppShell/WWReviewsAppShell";
 import { usePaginationTotal, useResources, useUser } from "../utilities/hooks";
 import { BasicProductReview, Category, Product } from "../utilities/types/products";
-import { Button, Group, Pagination, Select, Stack, TextInput } from "@mantine/core";
+import { Button, Card, Group, Pagination, Select, Stack, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
 import { useEffect, useState } from "react";
 
@@ -72,18 +72,22 @@ export default function HomePage() {
               Suggest Product
             </Button>
           </Group>
-          {products.map(
-            (product, i) =>
-              typeof reviewMap[product.id] !== "undefined" && (
-                <ProductCard
-                  product={product}
-                  categoryName={
-                    categories.find((category) => category.id === product.category)?.name || "Uncateogrized"
-                  }
-                  basicReview={reviewMap[product.id]}
-                  key={i}
-                />
-              )
+          {products.length > 0 ? (
+            products.map(
+              (product, i) =>
+                typeof reviewMap[product.id] !== "undefined" && (
+                  <ProductCard
+                    product={product}
+                    categoryName={
+                      categories.find((category) => category.id === product.category)?.name || "Uncateogrized"
+                    }
+                    basicReview={reviewMap[product.id]}
+                    key={i}
+                  />
+                )
+            )
+          ) : (
+            <Card shadow="md">No products found!</Card>
           )}
         </Stack>
         <Pagination

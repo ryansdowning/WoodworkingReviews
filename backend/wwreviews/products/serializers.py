@@ -35,9 +35,18 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    rating = serializers.SerializerMethodField()
+
     class Meta:
         model = Feedback
         fields = "__all__"
+
+    def get_username(self, obj: Feedback) -> str:
+        return obj.user.username if obj.user else "[deleted]"
+    
+    def get_rating(self, obj: Feedback) -> int:
+        return Rating.objects.get(user=obj.user, product=obj.product).value
 
 
 class BasicProductReviewSerializer(serializers.ModelSerializer):

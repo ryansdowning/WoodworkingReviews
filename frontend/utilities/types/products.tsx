@@ -51,7 +51,9 @@ export type Feedback = Resource &
   TrackedMixin & {
     product: number;
     user: number;
+    username: string;
     text: string;
+    rating: number;
   };
 
 export type BasicProductReview = Resource & {
