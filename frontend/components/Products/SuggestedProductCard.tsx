@@ -33,6 +33,11 @@ export function SuggestedProductCard({
             sx={{ input: { "&:disabled": { cursor: "default" } } }}
           />
           <TextInput
+            label="Category"
+            value={suggestedProduct.category}
+            sx={{ input: { "&:disabled": { cursor: "default" } } }}
+          />
+          <TextInput
             label="Price"
             value={suggestedProduct.price.toString()}
             sx={{ input: { "&:disabled": { cursor: "default" } } }}

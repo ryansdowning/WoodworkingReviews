@@ -56,7 +56,9 @@ export function ReviewProductModal({
             })
               ?.then(() => {
                 if (ref.current?.value && ref.current.value !== "")
-                  createResource<Omit<Feedback, "user" | "updated_at" | "created_at">>("products/feedback/", {
+                  createResource<
+                    Omit<Feedback, "user" | "updated_at" | "created_at" | "rating" | "username">
+                  >("products/feedback/", {
                     product: product.id,
                     text: ref.current.value,
                   });
