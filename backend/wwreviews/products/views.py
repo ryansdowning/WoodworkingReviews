@@ -24,13 +24,10 @@ class SuggestedProductView(CreateUserFieldMixin, IsAuthenticatedView):
         if self.request is None or self.request.user is None:
             return self.queryset.none()
         if self.request.user.member.role == Member.Role.MODERATOR:
-            print("QUERYSET1")
             return self.queryset
         return self.queryset.filter(user=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
-        print("HERE")
-        print(self.queryset)
         return super().retrieve(request, *args, **kwargs)
 
 
