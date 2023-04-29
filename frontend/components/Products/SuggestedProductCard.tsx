@@ -69,7 +69,7 @@ export function SuggestedProductCard({
                     );
                     return undefined;
                   } else {
-                    return createResource<Omit<Product, "created_at" | "updated_at">>("products/product", {
+                    return createResource<Omit<Product, "created_at" | "updated_at">>("products/product/", {
                       name: suggestedProduct.name,
                       price: suggestedProduct.price,
                       link: suggestedProduct.link,
